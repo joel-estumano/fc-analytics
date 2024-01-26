@@ -15,10 +15,21 @@
 }
 
 .card.bg-primary {
-    background-image: linear-gradient(9deg,
-            var(--bs-black) 15%,
-            var(--bs-primary) 75%,
-            var(--bs-black) 100%);
+    background-image: url('../assets/img/serra.jpeg') !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    &::before {
+        content: "";
+        position: absolute;
+        background-image: linear-gradient(9deg,
+                var(--bs-black) 15%,
+                var(--bs-primary) 75%,
+                var(--bs-black) 100%);
+                width: 100%;
+                top: 0;
+                bottom: 0;
+                opacity: .5;
+    }
 }
 
 .card.bg-secondary {
