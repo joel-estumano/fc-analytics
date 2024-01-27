@@ -147,22 +147,22 @@ export const Home: React.FC<{}> = () => {
                 });
 
             /*  const result: ResultInterface = {
-                                   step: 1,
-                                   fullTime: controle.fullTime,
-                                   posseTimeA: `${(
-                                       (100 * controle.clubeA.possessionTime) /
-                                       controle.fullTime
-                                   ).toFixed(0)}%`,
-                                   posseTimeB: `${(
-                                       (100 * controle.clubeB.possessionTime) /
-                                       controle.fullTime
-                                   ).toFixed(0)}%`,
-                                   posseFora: `${(
-                                       controle.fullTime -
-                                       (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
-                                   ).toFixed(0)}%`,
-                               };
-                                */
+                                         step: 1,
+                                         fullTime: controle.fullTime,
+                                         posseTimeA: `${(
+                                             (100 * controle.clubeA.possessionTime) /
+                                             controle.fullTime
+                                         ).toFixed(0)}%`,
+                                         posseTimeB: `${(
+                                             (100 * controle.clubeB.possessionTime) /
+                                             controle.fullTime
+                                         ).toFixed(0)}%`,
+                                         posseFora: `${(
+                                             controle.fullTime -
+                                             (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
+                                         ).toFixed(0)}%`,
+                                     };
+                                      */
         } else {
             //console.log('provide fallback share');
         }
@@ -171,10 +171,7 @@ export const Home: React.FC<{}> = () => {
     return (
         <>
             <React.Fragment>
-                <ComponentToPrint
-                    ref={elementRef}
-                    result={{ fullTime: controle.fullTime }}
-                />
+                <ComponentToPrint ref={elementRef} controle={controle} />
             </React.Fragment>
             <nav
                 className="navbar navbar-expand-lg bg-black fixed-top d-block"
@@ -266,13 +263,15 @@ export const Home: React.FC<{}> = () => {
                                     } bg-primary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-primary) ${((100 * controle.clubeA.possessionTime) /
-                                        controle.fullTime) *
+                                            controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold text-primary">Serra Branca</span>
+                                    <span className="display-6 text-semibold text-primary">
+                                        Serra Branca
+                                    </span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeA.possessionTime} />
                                     </h4>
@@ -295,13 +294,15 @@ export const Home: React.FC<{}> = () => {
                                     } bg-secondary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-secondary) ${((100 * controle.clubeB.possessionTime) /
-                                        controle.fullTime) *
+                                            controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold text-secondary">Visitante</span>
+                                    <span className="display-6 text-semibold text-secondary">
+                                        Visitante
+                                    </span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeB.possessionTime} />
                                     </h4>
