@@ -164,7 +164,7 @@ export const Home: React.FC<{}> = () => {
                                      };
                                       */
         } else {
-            //console.log('provide fallback share');
+            alert('Ocorreu uma falha!');
         }
     };
 
@@ -187,7 +187,7 @@ export const Home: React.FC<{}> = () => {
                             height="40"
                         />
                     </a>
-                    <div className="navbar-brand">
+                    <div className="navbar-brand fs-2">
                         <button
                             className="btn btn-warning btn-controle me-2 rounded-circle"
                             disabled={!controle.isStarted}
@@ -220,7 +220,7 @@ export const Home: React.FC<{}> = () => {
                         </span>
                     </div>
 
-                    <button
+                    {/* <button
                         className="navbar-toggler border-0"
                         type="button"
                         data-bs-toggle="collapse"
@@ -230,20 +230,20 @@ export const Home: React.FC<{}> = () => {
                         aria-label="Toggle navigation"
                     >
                         <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </button> */}
 
-                    <div className="collapse navbar-collapse" id="navbar">
+                    <div className="collapse_ navbar-collapse_" id="navbar">
                         <ul className="navbar-nav mb-2 mb-lg-0 ms-auto">
                             {/* <li className="nav-item mx-2">
                                 <a className="nav-link text-capitalize">home</a>
                             </li> */}
                             <li className="nav-item mx-2">
                                 <button
-                                    className="btn btn-link text-white text-decoration-none"
+                                    className="btn btn-outline text-white text-decoration-none d-flex justify-content-center align-items-center"
                                     disabled={!(canShare && controle.fullTime > 0)}
                                     onClick={share}
                                 >
-                                    Conpartilhar<i className="fa-solid fa-share ms-2"></i>
+                                    <i className="fa-solid fa-share ms-2 fs-3 text-warning"></i>
                                 </button>
                             </li>
                         </ul>
@@ -263,15 +263,16 @@ export const Home: React.FC<{}> = () => {
                                     } bg-primary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-primary) ${((100 * controle.clubeA.possessionTime) /
-                                            controle.fullTime) *
+                                        controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold text-primary">
+                                    <span className="display-6 text-semibold d-block lh-1 text-primary">
                                         Serra Branca
                                     </span>
+                                    <span className="text-primary fs-5">E. C.</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeA.possessionTime} />
                                     </h4>
@@ -294,15 +295,16 @@ export const Home: React.FC<{}> = () => {
                                     } bg-secondary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-secondary) ${((100 * controle.clubeB.possessionTime) /
-                                            controle.fullTime) *
+                                        controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold text-secondary">
-                                        Visitante
+                                    <span className="display-6 text-semibold d-block lh-1 text-secondary">
+                                        Souza
                                     </span>
+                                    <span className="text-secondary fs-5">E. C.</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeB.possessionTime} />
                                     </h4>
