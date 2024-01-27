@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import "./Home.scss";
+import { useEffect, useRef, useState } from "react";
 import { TimerDisplay } from "../components/TimerDisplay";
 import { ClubeModel } from "../models/clube.model";
 import { ControleModel } from "../models/controle.model";
-import "./Home.scss";
 import { ControleInterface } from "../interfaces/controle.interface";
 import { PercentDisplay } from "../components/PercentDisplay";
-import { ResultInterface } from "../interfaces/result.interface";
 import { UseDocumentTitle } from "../hooks/UseDocumentTitleHook";
+import React from "react";
+import { ComponentToPrint } from "../components/ComponentToPrint";
+
+import { toPng } from "html-to-image";
 
 const clubeA = new ClubeModel();
 const clubeB = new ClubeModel();
 
 export const Home: React.FC<{}> = () => {
-
     UseDocumentTitle("FC Analytics - Posse de Bola");
 
     const [controle, setControle] = useState<ControleInterface>(
@@ -20,6 +22,8 @@ export const Home: React.FC<{}> = () => {
     );
 
     const [canShare, setCanShare] = useState<boolean>("share" in navigator);
+
+    const elementRef = useRef(null);
 
     useEffect(() => {
         if (controle.isStarted) {
@@ -119,38 +123,56 @@ export const Home: React.FC<{}> = () => {
 
     const share = () => {
         if (canShare) {
-            const result: ResultInterface = {
-                step: 1,
-                fullTime: controle.fullTime,
-                posseTimeA: `${(
-                    (100 * controle.clubeA.possessionTime) /
-                    controle.fullTime
-                ).toFixed(0)}%`,
-                posseTimeB: `${(
-                    (100 * controle.clubeB.possessionTime) /
-                    controle.fullTime
-                ).toFixed(0)}%`,
-                posseFora: `${(
-                    controle.fullTime -
-                    (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
-                ).toFixed(0)}%`,
-            };
-            navigator
-                .share({
-                    title: "Detalhes FC Analitics",
-                    text: JSON.stringify(result),
+            toPng(elementRef.current as any, { cacheBust: false })
+                .then(async (base64url) => {
+                    const filename = "FC Analytics";
+                    const blob = await (await fetch(base64url)).blob();
+                    const file = new File([blob], `${filename}.png`, { type: blob.type });
+
+                    navigator
+                        .share({
+                            title: `Detalhes ${filename}`,
+                            text: filename,
+                            files: [file],
+                        })
+                        .then(() => {
+                            console.log("Compartilhado com sucesso!");
+                        })
+                        .catch((erro) => {
+                            console.error("Erro ao compartilhar:", erro);
+                        });
                 })
-                .then(() => {
-                    //console.log('Callback after sharing');
-                })
-                .catch(console.error);
+                .catch((err) => {
+                    console.log(err);
+                });
+
+            /*  const result: ResultInterface = {
+                                         step: 1,
+                                         fullTime: controle.fullTime,
+                                         posseTimeA: `${(
+                                             (100 * controle.clubeA.possessionTime) /
+                                             controle.fullTime
+                                         ).toFixed(0)}%`,
+                                         posseTimeB: `${(
+                                             (100 * controle.clubeB.possessionTime) /
+                                             controle.fullTime
+                                         ).toFixed(0)}%`,
+                                         posseFora: `${(
+                                             controle.fullTime -
+                                             (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
+                                         ).toFixed(0)}%`,
+                                     };
+                                      */
         } else {
-            //console.log('provide fallback share');
+            alert('Ocorreu uma falha!');
         }
     };
 
     return (
         <>
+            <React.Fragment>
+                <ComponentToPrint ref={elementRef} controle={controle} />
+            </React.Fragment>
             <nav
                 className="navbar navbar-expand-lg bg-black fixed-top d-block"
                 data-bs-theme="dark"
@@ -165,7 +187,7 @@ export const Home: React.FC<{}> = () => {
                             height="40"
                         />
                     </a>
-                    <div className="navbar-brand">
+                    <div className="navbar-brand fs-2">
                         <button
                             className="btn btn-warning btn-controle me-2 rounded-circle"
                             disabled={!controle.isStarted}
@@ -198,7 +220,7 @@ export const Home: React.FC<{}> = () => {
                         </span>
                     </div>
 
-                    <button
+                    {/* <button
                         className="navbar-toggler border-0"
                         type="button"
                         data-bs-toggle="collapse"
@@ -208,20 +230,20 @@ export const Home: React.FC<{}> = () => {
                         aria-label="Toggle navigation"
                     >
                         <span className="navbar-toggler-icon"></span>
-                    </button>
+                    </button> */}
 
-                    <div className="collapse navbar-collapse" id="navbar">
+                    <div className="collapse_ navbar-collapse_" id="navbar">
                         <ul className="navbar-nav mb-2 mb-lg-0 ms-auto">
                             {/* <li className="nav-item mx-2">
                                 <a className="nav-link text-capitalize">home</a>
                             </li> */}
                             <li className="nav-item mx-2">
                                 <button
-                                    className="btn btn-link text-white text-decoration-none"
+                                    className="btn btn-outline text-white text-decoration-none d-flex justify-content-center align-items-center"
                                     disabled={!(canShare && controle.fullTime > 0)}
                                     onClick={share}
                                 >
-                                    Conpartilhar<i className="fa-solid fa-share ms-2"></i>
+                                    <i className="fa-solid fa-share ms-2 fs-3 text-warning"></i>
                                 </button>
                             </li>
                         </ul>
@@ -241,13 +263,16 @@ export const Home: React.FC<{}> = () => {
                                     } bg-primary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-primary) ${((100 * controle.clubeA.possessionTime) /
-                                            controle.fullTime) *
+                                        controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold">Clube A</span>
+                                    <span className="display-6 text-semibold d-block lh-1 text-primary">
+                                        Serra Branca
+                                    </span>
+                                    <span className="text-primary fs-5">E. C.</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeA.possessionTime} />
                                     </h4>
@@ -270,13 +295,16 @@ export const Home: React.FC<{}> = () => {
                                     } bg-secondary`}
                                 style={{
                                     background: `conic-gradient(var(--bs-secondary) ${((100 * controle.clubeB.possessionTime) /
-                                            controle.fullTime) *
+                                        controle.fullTime) *
                                         3.6
                                         }deg, var(--bs-dark) 0deg)`,
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold">Clube B</span>
+                                    <span className="display-6 text-semibold d-block lh-1 text-secondary">
+                                        Souza
+                                    </span>
+                                    <span className="text-secondary fs-5">E. C.</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeB.possessionTime} />
                                     </h4>

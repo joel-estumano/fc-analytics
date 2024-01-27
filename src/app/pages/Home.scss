@@ -15,17 +15,43 @@
 }
 
 .card.bg-primary {
-    background-image: linear-gradient(9deg,
-            var(--bs-black) 15%,
-            var(--bs-primary) 75%,
-            var(--bs-black) 100%);
+    background-image: url('../assets/img/serra.jpeg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &::before {
+        content: "";
+        position: absolute;
+        background-image: linear-gradient(9deg,
+                var(--bs-black) 15%,
+                var(--bs-primary) 75%,
+                var(--bs-black) 100%);
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        opacity: .4;
+    }
 }
 
 .card.bg-secondary {
-    background-image: linear-gradient(-9deg,
-            var(--bs-black) 15%,
-            var(--bs-secondary) 75%,
-            var(--bs-black) 100%);
+    background-image: url('../assets/img/souza.jpeg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &::before {
+        content: "";
+        position: absolute;
+        background-image: linear-gradient(9deg,
+                var(--bs-black) 15%,
+                var(--bs-secondary) 75%,
+                var(--bs-black) 100%);
+        width: 100%;
+        top: 0;
+        bottom: 0;
+        opacity: .4;
+    }
 }
 
 .btn.btn-action {
