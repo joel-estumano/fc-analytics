@@ -1,24 +1,20 @@
+import "./Home.scss";
 import { useEffect, useRef, useState } from "react";
 import { TimerDisplay } from "../components/TimerDisplay";
 import { ClubeModel } from "../models/clube.model";
 import { ControleModel } from "../models/controle.model";
-import "./Home.scss";
 import { ControleInterface } from "../interfaces/controle.interface";
 import { PercentDisplay } from "../components/PercentDisplay";
-import { ResultInterface } from "../interfaces/result.interface";
 import { UseDocumentTitle } from "../hooks/UseDocumentTitleHook";
 import React from "react";
 import { ComponentToPrint } from "../components/ComponentToPrint";
-import { exportComponentAsPNG } from 'react-component-export-image';
 
-/*  */
-import { toPng } from 'html-to-image';
+import { toPng } from "html-to-image";
 
 const clubeA = new ClubeModel();
 const clubeB = new ClubeModel();
 
 export const Home: React.FC<{}> = () => {
-
     UseDocumentTitle("FC Analytics - Posse de Bola");
 
     const [controle, setControle] = useState<ControleInterface>(
@@ -127,82 +123,46 @@ export const Home: React.FC<{}> = () => {
 
     const share = () => {
         if (canShare) {
-
-            /* const file = exportComponentAsPNG(componentRef as any).then(file_=>{
-                console.log('file: ', file_);
-            }); */
-
-
             toPng(elementRef.current as any, { cacheBust: false })
-                .then((dataUrl) => {
+                .then(async (base64url) => {
+                    const filename = "FC Analytics";
+                    const blob = await (await fetch(base64url)).blob();
+                    const file = new File([blob], `${filename}.png`, { type: blob.type });
 
-                    //const link = document.createElement("a");
-
-                    /* link.download = "fc-analytics.png";
-                    link.href = dataUrl;
-                    link.click(); */
-
-                    const byteCharacters = atob(dataUrl);
-                    const byteNumbers = new Array(byteCharacters.length);
-
-                    for (let i = 0; i < byteCharacters.length; i++) {
-                        byteNumbers[i] = byteCharacters.charCodeAt(i);
-                    }
-
-                    const byteArray = new Uint8Array(byteNumbers);
-
-                    // Cria um Blob a partir do array de bytes
-                    const blob = new Blob([byteArray], { type: "image/png" });
-
-                    // Cria um objeto de arquivo
-                    const arquivo = new File([blob], "imagem.png", { type: "image/png" });
-
-
-                    // Compartilha usando navigator.share
-                    navigator.share({
-                        title: "Detalhes FC Analytics",
-                        files: [arquivo],
-                    })
+                    navigator
+                        .share({
+                            title: `Detalhes ${filename}`,
+                            text: filename,
+                            files: [file],
+                        })
                         .then(() => {
-                            // Lógica a ser executada após o compartilhamento bem-sucedido
                             console.log("Compartilhado com sucesso!");
                         })
                         .catch((erro) => {
-                            // Lógica a ser executada em caso de erro
                             console.error("Erro ao compartilhar:", erro);
                         });
-
                 })
                 .catch((err) => {
                     console.log(err);
                 });
 
-
             /*  const result: ResultInterface = {
-                 step: 1,
-                 fullTime: controle.fullTime,
-                 posseTimeA: `${(
-                     (100 * controle.clubeA.possessionTime) /
-                     controle.fullTime
-                 ).toFixed(0)}%`,
-                 posseTimeB: `${(
-                     (100 * controle.clubeB.possessionTime) /
-                     controle.fullTime
-                 ).toFixed(0)}%`,
-                 posseFora: `${(
-                     controle.fullTime -
-                     (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
-                 ).toFixed(0)}%`,
-             };
-             navigator
-                 .share({
-                     title: "Detalhes FC Analitics",
-                     files: [],
-                 })
-                 .then(() => {
-                     //console.log('Callback after sharing');
-                 })
-                 .catch(console.error); */
+                                   step: 1,
+                                   fullTime: controle.fullTime,
+                                   posseTimeA: `${(
+                                       (100 * controle.clubeA.possessionTime) /
+                                       controle.fullTime
+                                   ).toFixed(0)}%`,
+                                   posseTimeB: `${(
+                                       (100 * controle.clubeB.possessionTime) /
+                                       controle.fullTime
+                                   ).toFixed(0)}%`,
+                                   posseFora: `${(
+                                       controle.fullTime -
+                                       (controle.clubeA.possessionTime + controle.clubeB.possessionTime)
+                                   ).toFixed(0)}%`,
+                               };
+                                */
         } else {
             //console.log('provide fallback share');
         }
@@ -210,6 +170,12 @@ export const Home: React.FC<{}> = () => {
 
     return (
         <>
+            <React.Fragment>
+                <ComponentToPrint
+                    ref={elementRef}
+                    result={{ fullTime: controle.fullTime }}
+                />
+            </React.Fragment>
             <nav
                 className="navbar navbar-expand-lg bg-black fixed-top d-block"
                 data-bs-theme="dark"
@@ -284,11 +250,7 @@ export const Home: React.FC<{}> = () => {
                                 </button>
                             </li>
                         </ul>
-                        <form className="d-flex" role="search">
-                            <React.Fragment>
-                                <ComponentToPrint ref={elementRef} />
-                            </React.Fragment>
-                        </form>
+                        <form className="d-flex" role="search"></form>
                     </div>
                 </div>
             </nav>
@@ -310,7 +272,7 @@ export const Home: React.FC<{}> = () => {
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold">Serra Branca</span>
+                                    <span className="display-6 text-semibold text-primary">Serra Branca</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeA.possessionTime} />
                                     </h4>
@@ -339,7 +301,7 @@ export const Home: React.FC<{}> = () => {
                                 }}
                             >
                                 <div className="position-relative">
-                                    <span className="display-6 text-semibold">Visitante</span>
+                                    <span className="display-6 text-semibold text-secondary">Visitante</span>
                                     <h4 className="display-4 m-0">
                                         <TimerDisplay time={controle.clubeB.possessionTime} />
                                     </h4>
